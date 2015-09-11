@@ -1,3 +1,7 @@
+# Binary files
+gettimeofday
+rdtsc
+
 # Object files
 *.o
 *.ko
