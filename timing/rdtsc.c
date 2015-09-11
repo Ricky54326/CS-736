@@ -16,11 +16,6 @@ static inline unsigned long long read_tscp(unsigned int *aux)
 	return low | ((u64)high << 32);
 }
 
-void print_buffer(char* buffer)
-{
-	
-}
-
 int main(int argc, char** argv)
 {
 	uint val;
