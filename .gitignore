@@ -2,6 +2,9 @@
 gettimeofday
 rdtsc
 
+# Swap files
+*.swp
+
 # Object files
 *.o
 *.ko
