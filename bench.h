@@ -6,6 +6,7 @@ typedef unsigned int uint;
 typedef unsigned long long ull;
 
 /** From the Linux Kernel */
+/*******ADD CITATION*******/
 static inline unsigned long long read_tscp(unsigned int *aux)
 {
         unsigned long low, high;

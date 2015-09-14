@@ -3,7 +3,9 @@ CFLAGS = -ggdb -pthread
 INCLUDE = -I .
 
 THREADING := self \
-	equal
+	equal \
+	time_pthread \
+	time_proc
 
 TIMING := rdtsc \
 	gettimeofday	
