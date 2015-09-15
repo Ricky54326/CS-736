@@ -8,6 +8,9 @@ time_pthread
 pipe
 signal
 
+parent.txt
+child.txt
+
 # Swap files
 *.swp
 
