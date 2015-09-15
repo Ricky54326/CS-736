@@ -3,6 +3,8 @@ equal
 self
 gettimeofday
 rdtsc
+time_proc
+time_pthread
 
 # Swap files
 *.swp
