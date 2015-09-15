@@ -5,6 +5,8 @@ gettimeofday
 rdtsc
 time_proc
 time_pthread
+pipe
+signal
 
 # Swap files
 *.swp
