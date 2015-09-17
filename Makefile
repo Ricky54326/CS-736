@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -ggdb -pthread
+CFLAGS = -pthread
 INCLUDE = -I .
 
 THREADING := self \

@@ -2,21 +2,36 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <string.h>
 
 #include "bench.h"
 
 void* pthread_func(void* argument)
 {
-	printf("On the new thread!\n");
+	ull high;
+	ull low;
 
-	uint val;
-	ull start = read_tscp(&val);	
-	pthread_t self = pthread_self();
-	ull end = read_tscp(&val);
+	ull start;
+	ull end;
 
+	uint diff;
+
+	RDTSC(start);
+	pthread_t t = pthread_self();
+	RDTSC(end);
+
+	if(!t) printf("No p?\n"); 
         printf("Start cycles: %llu\n", start);
         printf("End cycles  : %llu\n", end);
         printf("Difference  : %llu\n", (end - start));
+	diff = end - start;
+	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
+        if(file < 0) printf("BAD FILE!\n");
+        char numbuffer[512];
+        snprintf(numbuffer, 512, "%lu\n", diff);
+        write(file, numbuffer, strlen(numbuffer));
+        close(file);
 
 	return NULL;
 }

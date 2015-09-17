@@ -1,4 +1,6 @@
 #include <pthread.h>
+#include <fcntl.h>
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -13,8 +15,13 @@ void* pthread_func(void* argument)
 void time_proc(){
 	pthread_t thr;
 
+	ull start;
+	ull end;
+	ull high;
+	ull low;
+	uint diff;
 	uint val;
-	ull start = read_tscp(&val);	
+	RDTSC(start);
 
 	//child
 	if(fork() == 0){
@@ -25,13 +32,20 @@ void time_proc(){
 	else{
 		wait();
 	}
+	RDTSC(end);
 
-	ull end = read_tscp(&val);
 	printf("Start cycles: %llu\n", start);
-    printf("End cycles  : %llu\n", end);
-    printf("Difference  : %llu\n", (end - start));
+	printf("End cycles  : %llu\n", end);
+	printf("Difference  : %llu\n", (end - start));
 
+	diff = end - start;
 
+	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
+	if(file < 0) printf("BAD FILE!\n");
+	char numbuffer[512];
+	snprintf(numbuffer, 512, "%lu\n", diff);
+	write(file, numbuffer, strlen(numbuffer));
+	close(file);
 
 	return;
 }

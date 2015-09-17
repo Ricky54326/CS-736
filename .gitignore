@@ -10,6 +10,7 @@ signal
 
 parent.txt
 child.txt
+output.txt
 
 # Swap files
 *.swp
