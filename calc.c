@@ -30,6 +30,10 @@ int main(int argc, char** argv)
 	if(cpu_speed == 0) return -1;
 	double result = (cycles * 1000000000.00f) / cpu_speed;
 
+	result *= 10;
+	result = (long long int)result;
+	result /= 10;
+
 	printf("%lf\n", result);
 	return 0;
 }

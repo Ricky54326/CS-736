@@ -22,7 +22,7 @@ TIMING_BIN := $(addprefix timing/, $(TIMING))
 TIMING_SOURCES := $(addsuffix .c, $(TIMING_BIN))
 THREADING_BIN := $(addprefix threading/, $(THREADING))
 THREADING_SOURCES := $(addsuffix .c, $(THREADING_BIN))
-CLEAN := $(TIMING) $(THREADING) $(CONTEXT) child.txt parent.txt calc
+CLEAN := $(TIMING) $(THREADING) $(CONTEXT) child.txt parent.txt calc output.txt
 
 all: $(TIMING) $(THREADING) $(CONTEXT) calc
 

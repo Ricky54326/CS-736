@@ -10,13 +10,13 @@ touch $CLEAN
 echo "Building..."
 make clean all > /dev/null
 
+printf "Current cpu speed ... "
+SPEED=$(cat /proc/cpuinfo | grep "cpu MHz" | head -n 1 | cut -d ":" -f 2)
+echo "$SPEED MHz"
+
 echo "+----------------------------------+"
 echo "| All results are in nano seconds. |"
 echo "+----------------------------------+"
-
-printf "Current cpu speed ... "
-SPEED=$(cat /proc/cpuinfo | grep "cpu MHz" | head -n 1 | cut -d ":" -f 2)
-echo $SPEED
 printf "Base Measurement .... "
 # Run the base test
 FAST=$($REPEAT ./rdtsc)
