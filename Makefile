@@ -5,7 +5,8 @@ INCLUDE = -I .
 THREADING := self \
 	equal \
 	time_pthread \
-	time_proc
+	time_proc \
+	fault
 
 TIMING := rdtsc \
 	gettimeofday

@@ -9,6 +9,7 @@
 
 void* pthread_func(void* argument)
 {
+	pthread_exit(NULL);
 	return NULL;
 }
 
@@ -21,12 +22,14 @@ void time_pthread(){
 	uint diff;
 	ull start;
 	ull end;
+
+	/* Timing section */
 	RDTSC(start);
-	if(pthread_create(&thr, NULL, pthread_func, NULL ))
-		perror("");
-	
+	pthread_create(&thr, NULL, pthread_func, NULL);	
 	pthread_join(thr, (void**)NULL);
 	RDTSC(end);
+	/* End section */
+
 	diff = end - start;
 	printf("Start cycles: %llu\n", start);
 	printf("End cycles  : %llu\n", end);
