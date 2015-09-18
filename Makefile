@@ -1,6 +1,8 @@
-CC = gcc
-CFLAGS = -pthread
-INCLUDE = -I .
+CC := gcc
+CFLAGS := -pthread
+INCLUDE := -I .
+
+CFLAGS := $(CFLAGS) $(BUILD_FLAGS)
 
 THREADING := self \
 	equal \
@@ -20,9 +22,9 @@ TIMING_BIN := $(addprefix timing/, $(TIMING))
 TIMING_SOURCES := $(addsuffix .c, $(TIMING_BIN))
 THREADING_BIN := $(addprefix threading/, $(THREADING))
 THREADING_SOURCES := $(addsuffix .c, $(THREADING_BIN))
-CLEAN := $(TIMING) $(THREADING) $(CONTEXT) child.txt parent.txt
+CLEAN := $(TIMING) $(THREADING) $(CONTEXT) child.txt parent.txt calc
 
-all: $(TIMING) $(THREADING) $(CONTEXT)
+all: $(TIMING) $(THREADING) $(CONTEXT) calc
 
 %: timing/%.c
 	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
@@ -32,6 +34,8 @@ all: $(TIMING) $(THREADING) $(CONTEXT)
 
 %: context-switch/%.c
 	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
+calc:
+	$(CC) $(CFLAGS) $(INCLUDE) calc.c -o calc
 
 clean:
 	rm -rf $(CLEAN)

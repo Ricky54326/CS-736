@@ -20,7 +20,7 @@ static inline unsigned long long read_tscp(unsigned int *aux)
 }
 
 // #define GETPID
-#define GETUID
+// #define GETUID
 
 #define RDTSC(high, low, result) \
 	asm volatile("cpuid"); \
