@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -8,8 +9,12 @@
 #include <stdio.h>
 #include "bench.h"
 
-ull timer_start;
-ull timer_end;
+ull start;
+ull end;
+ull high;
+ull low;
+uint diff;
+
 pid_t parent;
 pid_t child;
 
@@ -27,19 +32,26 @@ struct process_sync
 
 void main_handler(int sig)
 {
-	unsigned int val;
-	timer_end = read_tscp(&val);
+	RDTSC(end);
 	if(sig != SIGNAL)
 	{
 		/* Not the right signal!! */
 		printf("An invalid signal was received.\n");
-		return;
+		end = start + 10000000;
 	}
 
 	printf("Relay complete.\n");
-	printf("Starting cycles: %llu\n", timer_start);
-	printf("Ending cycles  : %llu\n", timer_end);
-	printf("Cycles to comp : %llu\n", (timer_end - timer_start));
+	printf("Starting cycles: %llu\n", start);
+	printf("Ending cycles  : %llu\n", end);
+	printf("Cycles to comp : %llu\n", (end - start));
+	diff = end - start;
+
+	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
+	if(file < 0) printf("BAD FILE!\n");
+	char numbuffer[512];
+	snprintf(numbuffer, 512, "%lu\n", diff);
+	write(file, numbuffer, strlen(numbuffer));
+	close(file);
 
 	/* End process */
 	exit(0);
@@ -59,10 +71,10 @@ int main(int argc, char** argv)
 			MAP_SHARED | MAP_ANONYMOUS | MAP_POPULATE, -1, 0);
 	/* Did we get the requested area? */
 	if(share == (void*)-1)
-        {
-                perror("");
-                return -1;
-        }
+	{
+		perror("");
+		return -1;
+	}
 
 	pthread_mutexattr_init(&share->lock_attr);
 	/* Allow mutex's to be used across processes */
@@ -159,7 +171,7 @@ int main(int argc, char** argv)
 		fflush(stdout);
 
 		unsigned int val;
-		timer_start = read_tscp(&val);
+		RDTSC(start);
 		kill(child, SIGNAL);
 
 		/* Wait for signal to come back. */	

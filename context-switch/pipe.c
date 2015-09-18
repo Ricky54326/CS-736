@@ -1,3 +1,4 @@
+#include <string.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -8,8 +9,12 @@
 #include <stdio.h>
 #include "bench.h"
 
-ull timer_start;
-ull timer_end;
+ull start;
+ull end;
+uint diff;
+ull high;
+ull low;
+
 pid_t parent;
 pid_t child;
 
@@ -129,14 +134,15 @@ int main(int argc, char** argv)
 
 		int send = 0xAABBCCDD;
 		int recv;
-		unsigned int val;
-		timer_start = read_tscp(&val);
+		RDTSC(start);
 
 		/* Write to the child */
 		write(writep, &send, sizeof(int));
 		/* Read response */
 		read(readp, &recv, sizeof(int));
-		timer_end = read_tscp(&val);
+		RDTSC(end);
+
+		
 
 		if(send != recv)
 		{
@@ -146,9 +152,18 @@ int main(int argc, char** argv)
 		}
 
 		printf("Transfer success\n");
-		printf("Starting cycles: %llu\n", timer_start);
-		printf("Ending cycles  : %llu\n", timer_end);
-		printf("Cycles to comp : %llu\n", (timer_end - timer_start));
+		printf("Starting cycles: %llu\n", start);
+		printf("Ending cycles  : %llu\n", end);
+		printf("Cycles to comp : %llu\n", (end - start));
+
+		diff = end - start;
+		int file = open("output.txt", 
+			O_APPEND | O_RDWR | O_CREAT, 0644);
+		if(file < 0) printf("BAD FILE!\n");
+		char numbuffer[512];
+		snprintf(numbuffer, 512, "%lu\n", diff);
+		write(file, numbuffer, strlen(numbuffer));
+		close(file);
 
 		return 0;
 	} else {
