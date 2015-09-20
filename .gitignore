@@ -1,5 +1,8 @@
 # Binary files
+mutex
+calc
 equal
+fault
 self
 gettimeofday
 rdtsc
