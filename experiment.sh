@@ -58,11 +58,8 @@ FAST=$($REPEAT ./pipe)
 ./calc -s $SPEED $FAST
 
 printf "Threads Mutex ....... "
-# FAST=$($REPEAT ./mutex)
-# echo $FAST
-# ./calc -s $SPEED $FAST
-# $REPEAT ./mutex
-echo ""
+FAST=$($REPEAT ./mutex)
+./calc -s $SPEED $FAST
 
 printf "Threads Condition ... "
 #FAST=$($REPEAT ./condvar)
