@@ -6,8 +6,7 @@ typedef unsigned int uint;
 typedef unsigned long long ull;
 
 #define RDTSC(result) \
-        asm volatile("cpuid"); \
-        asm volatile("rdtsc" : "=a" (low), "=d" (high)); \
+        asm volatile("rdtscp" : "=a" (low), "=d" (high)); \
         result = ((ull)low) | ((ull)high << 32);
 
 /** From the Linux Kernel */
