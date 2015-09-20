@@ -14,7 +14,7 @@ pthread_mutex_t mut1, mut2;
 
 void *pthread_func1(void *argument)
 {
-	printf("Pthread1\n");
+	//printf("Pthread1\n");
 	pthread_mutex_unlock(&mut1);
 	pthread_mutex_lock(&mut2);
 	pthread_exit(NULL);
@@ -23,10 +23,9 @@ void *pthread_func1(void *argument)
 
 void *pthread_func2(void *argument)
 {
-	printf("Pthread2\n");
+	//printf("Pthread2\n");
 	pthread_mutex_lock(&mut1);
 	pthread_mutex_unlock(&mut2);
-
 	pthread_exit(NULL);
 	return NULL;
 }
@@ -40,13 +39,13 @@ void time_pthread(){
 	unsigned long diff;
 	ull start;
 	ull end;
-	int i, min = 0;
+	int i, min = 99999999;
 
 
 	pthread_mutex_init(&mut1, NULL);
 	pthread_mutex_init(&mut2, NULL);
 
-	for(i = 0; i < 10e4; i++){
+	for(i = 0; i < 10000; i++){
 		/* TODO: Better way to initialize them as locked? */
 		pthread_mutex_unlock(&mut1);
 		pthread_mutex_unlock(&mut2);
@@ -63,7 +62,7 @@ void time_pthread(){
 
 		//save min timing
 		if(diff < min)
-			diff = min;
+			min = diff;
 	}		
 
 
