@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 	printf("End cycles  : %llu\n", end);
 	printf("Difference  : %llu\n", (end - start));
 	printf("PID: %d  %d\n", pid, getpid());
-	uint diff = (uint)((ull)end - (ull)start);
+	unsigned long diff = (uint)((ull)end - (ull)start);
 	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
 	if(file < 0) printf("BAD FILE!\n");
 	char numbuffer[512];

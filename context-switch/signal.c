@@ -13,7 +13,7 @@ ull start;
 ull end;
 ull high;
 ull low;
-uint diff;
+unsigned long diff;
 
 pid_t parent;
 pid_t child;

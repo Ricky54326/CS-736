@@ -15,7 +15,7 @@ void* pthread_func(void* argument)
 	ull start;
 	ull end;
 
-	uint diff;
+	unsigned long diff;
 
 	RDTSC(start);
 	pthread_t t = pthread_self();

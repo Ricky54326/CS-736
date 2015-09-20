@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 	ull start;
 	ull end;
 
-	uint diff;
+	unsigned long diff;
 
 	char* page = mmap(NULL, 4096, PROT_READ | PROT_WRITE, 
 		MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);

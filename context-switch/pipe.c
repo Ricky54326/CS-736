@@ -11,7 +11,7 @@
 
 ull start;
 ull end;
-uint diff;
+unsigned long diff;
 ull high;
 ull low;
 

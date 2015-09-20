@@ -19,7 +19,7 @@ void time_pthread(){
 	uint val;
 	ull high;
 	ull low;
-	uint diff;
+	unsigned long diff;
 	ull start;
 	ull end;
 

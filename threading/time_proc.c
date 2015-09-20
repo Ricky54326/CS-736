@@ -19,7 +19,7 @@ void time_proc(){
 	ull end;
 	ull high;
 	ull low;
-	uint diff;
+	unsigned long diff;
 	uint val;
 	RDTSC(start);
 
