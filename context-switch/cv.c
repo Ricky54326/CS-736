@@ -8,29 +8,31 @@
 #include "bench.h"
 
 
+pthread_cond_t cv1, cv2;
 pthread_mutex_t mut1, mut2;
 
 
 
 void *pthread_func1(void *argument)
 {
-	//printf("Pthread1\n");
-	pthread_mutex_unlock(&mut1);
-	pthread_mutex_lock(&mut2);
+	printf("Pthread1\n");
+	pthread_cond_signal(&cv1);
+	pthread_cond_wait(&cv2, &mut2);
 	pthread_exit(NULL);
 	return NULL;
 }
 
 void *pthread_func2(void *argument)
 {
-	//printf("Pthread2\n");
-	pthread_mutex_lock(&mut1);
-	pthread_mutex_unlock(&mut2);
+	printf("Pthread2\n");
+	pthread_cond_wait(&cv1, &mut1);
+	pthread_cond_signal(&cv2);
 	pthread_exit(NULL);
 	return NULL;
 }
 
 void time_pthread(){
+
 	pthread_t thr1, thr2;
 
 	uint val;
@@ -42,15 +44,20 @@ void time_pthread(){
 	int i, min = 99999999;
 
 
+	/* initialize CVs */
+	pthread_cond_init(&cv1, NULL);
+	pthread_cond_init(&cv2, NULL);
+
+    /* initialize mutexes */
 	pthread_mutex_init(&mut1, NULL);
 	pthread_mutex_init(&mut2, NULL);
 
 	for(i = 0; i < 10000; i++){
 		/* TODO: Better way to initialize them as locked? */
-		pthread_mutex_unlock(&mut1);
-		pthread_mutex_unlock(&mut2);
-		pthread_mutex_lock(&mut1);
-		pthread_mutex_lock(&mut2);
+		pthread_cond_signal(&cv1);
+		pthread_cond_signal(&cv2);
+		// pthread_cond_wait(&cv1, &mut1);
+		// pthread_cond_wait(&cv2, &mut2);
 
 		RDTSC(start);
 		pthread_create(&thr1, NULL, pthread_func1, NULL);
