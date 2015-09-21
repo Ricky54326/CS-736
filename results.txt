@@ -1,0 +1,15 @@
+Building...
+Current cpu speed ...  3192.715 MHz
++----------------------------------+
+| All results are in nano seconds. |
++----------------------------------+
+Base Measurement .... 5.600000
+PID test: ........... 202.300000
+UID test ............ 195.100000
+PThread self ........ 211.100000
+Pthread join ........ 81130.000000
+FORK/WAIT ........... 73507.300000
+Context Switch SIG .. 5251.000000
+Context Switch Pipe . 4555.000000
+Threads Mutex ....... Write failed: Broken pipe
+john@ubuntu-12:~$
