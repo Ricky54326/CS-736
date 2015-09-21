@@ -2,12 +2,13 @@
 
 set -e
 
-REPEAT=repeat.sh
-CALC=."/calc"
+REPEAT="./repeat.sh"
+CALC=."./calc"
 CLEAN="output.txt fastest.txt"
-touch "$CLEAN"
+touch $CLEAN
 
 echo "Building..."
+make clean > /dev/null
 make clean all > /dev/null
 
 printf "Current cpu speed ... "
