@@ -7,31 +7,41 @@
 
 void* pthread_func(void* argument)
 {
-	printf("On the new thread!\n");
+	uint high;
+	uint low;
+	ull start;
+	ull end;
+	unsigned long diff;
 
 	pthread_t cmp_1 = 0x12345678;
 	pthread_t cmp_2 = pthread_self();
 
 	uint val;
-	ull start = read_tscp(&val);	
+	RDTSC(start);	
 	pthread_equal(cmp_1, cmp_2);
-	ull end = read_tscp(&val);
+	RDTSC(end);
 
-        printf("Start cycles: %llu\n", start);
-        printf("End cycles  : %llu\n", end);
-        printf("Difference  : %llu\n", (end - start));
-
-	return NULL;
+	return (void*)diff;
 }
 
 int main(int argc, char** argv)
 {
 	pthread_t thr;
 
-	if(pthread_create(&thr, NULL, pthread_func, NULL ))
-		perror("");
+	uint best = (uint)-1;
 
-	pthread_join(thr, (void**)NULL);
+	int x;
+	for(x = 0;x < 10000;x++)
+	{
+		if(pthread_create(&thr, NULL, pthread_func, NULL ))
+		{
+			perror("");
+			continue;
+		}
+
+		uint test;
+		pthread_join(thr, (void**)&test);
+		if(test < best) best = test;
+	}
 	return 0;
-
 }

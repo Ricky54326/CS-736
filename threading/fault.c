@@ -7,27 +7,38 @@
 
 #include "bench.h"
 
-int main(int argc, char** argv)
+uint test(void)
 {
-	ull high;
-	ull low;
-
+        ull high;
+        ull low;
 	ull start;
 	ull end;
+	uint diff;
 
-	unsigned long diff;
-
-	char* page = mmap(NULL, 4096, PROT_READ | PROT_WRITE, 
+	int* page = mmap(NULL, 0x1000, PROT_READ | PROT_WRITE, 
 		MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+
 
 	RDTSC(start);
 	page[0] = 1;
 	RDTSC(end);
-
-        printf("Start cycles: %llu\n", start);
-        printf("End cycles  : %llu\n", end);
-        printf("Difference  : %llu\n", (end - start));
 	diff = end - start;
+
+	munmap(page, 0x1000);
+	return diff;
+}
+
+int main(int argc, char** argv)
+{
+	int x;
+	uint best = (uint)-1;
+	for(x = 0;x < 1000;x++)
+	{
+		uint result = test();
+		if(result < best) best = result;
+	}
+
+	unsigned long diff = best;
 	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
         if(file < 0) printf("BAD FILE!\n");
         char numbuffer[512];
