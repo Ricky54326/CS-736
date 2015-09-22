@@ -7,72 +7,75 @@
 
 #include "bench.h"
 
-
 pthread_mutex_t mut1, mut2;
-
-
+ull high;
+ull low;
+ull start;
+ull end;
+unsigned int best;
 
 void *pthread_func1(void *argument)
 {
-	//printf("Pthread1\n");
-	pthread_mutex_unlock(&mut1);
-	pthread_mutex_lock(&mut2);
-	pthread_exit(NULL);
+	best = (unsigned int)-1;
+	pthread_mutex_unlock(&mut2);
+	/* Block for the thread to run */
+	pthread_mutex_lock(&mut1);
+	/* The other thread is now guarenteed to be blocked! */
+	int x;
+	for(x = 0;x < 10000;x++)
+	{
+		RDTSC(start);
+		/* The other thead should be blocked now. */
+		pthread_mutex_unlock(&mut2);
+
+		/**
+		 * Now once we are able to acquire this lock, the
+		 * other thread was allowed to run for one cycle		
+		 */
+		pthread_mutex_lock(&mut1);
+
+		/* The other thread unlocked us! */
+		RDTSC(end);
+
+		unsigned int diff = end - start;
+		if(diff < best) best = diff;
+	}
+
 	return NULL;
 }
 
 void *pthread_func2(void *argument)
 {
-	//printf("Pthread2\n");
-	pthread_mutex_lock(&mut1);
-	pthread_mutex_unlock(&mut2);
-	pthread_exit(NULL);
+	for(;;)
+	{
+		pthread_mutex_lock(&mut2);
+		pthread_mutex_unlock(&mut1);
+	}
 	return NULL;
 }
 
 void time_pthread(){
 	pthread_t thr1, thr2;
 
-	uint val;
-	ull high;
-	ull low;
-	unsigned long diff;
-	ull start;
-	ull end;
-	int i, min = 99999999;
-
-
 	pthread_mutex_init(&mut1, NULL);
 	pthread_mutex_init(&mut2, NULL);
+	pthread_mutex_lock(&mut1);
+	pthread_mutex_lock(&mut2);
 
-	for(i = 0; i < 10000; i++){
-		/* TODO: Better way to initialize them as locked? */
-		pthread_mutex_unlock(&mut1);
-		pthread_mutex_unlock(&mut2);
-		pthread_mutex_lock(&mut1);
-		pthread_mutex_lock(&mut2);
+	pthread_create(&thr1, NULL, pthread_func1, NULL);
+	pthread_create(&thr2, NULL, pthread_func2, NULL);
+	pthread_join(thr1, NULL);
+	pthread_cancel(thr2);
 
-		RDTSC(start);
-		pthread_create(&thr1, NULL, pthread_func1, NULL);
-		pthread_create(&thr2, NULL, pthread_func2, NULL);
-		pthread_join(thr1, NULL);
-		RDTSC(end);
-		diff = end - start;
+	unsigned int diff = best;
+	printf("Best run: %lu\n", diff);
 
-		//save min timing
-		if(diff < min)
-			min = diff;
-	}		
-
-
-	printf("Min cycles: %d\n", min);
-
-    int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
-    if(file < 0) printf("BAD FILE!\n");
-    char numbuffer[512];
-    snprintf(numbuffer, 512, "%lu\n", diff);
-    write(file, numbuffer, strlen(numbuffer));
-    close(file);
+	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
+	if(file < 0) printf("BAD FILE!\n");
+	char numbuffer[512];
+	snprintf(numbuffer, 512, "%lu\n", diff);
+	write(file, numbuffer, strlen(numbuffer));
+	close(file);
 }
 
 int main(int argc, char** argv)

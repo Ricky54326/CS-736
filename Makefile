@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -pthread
+CFLAGS := -pthread -ggdb
 INCLUDE := -I .
 
 CFLAGS := $(CFLAGS) $(BUILD_FLAGS)
@@ -16,7 +16,7 @@ TIMING := rdtsc \
 CONTEXT := signal \
 	pipe \
 	mutex \
-	cv
+	cond
 
 CONTEXT_BIN := $(addprefix context-switch/, $(CONTEXT))
 CONTEXT_SOURCES := $(addsuffix .c, $(CONTEXT_BIN))
@@ -29,6 +29,7 @@ CLEAN := $(TIMING) $(THREADING) $(CONTEXT) child.txt \
 	calc \
 	output.txt \
 	fastest.txt
+	
 
 all: $(TIMING) $(THREADING) $(CONTEXT) calc
 

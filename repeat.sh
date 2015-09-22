@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -f output.txt
-for run in {1..50000}
+for run in {1..500}
 do
 	$1 > /dev/null
 done

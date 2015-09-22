@@ -22,25 +22,28 @@ void time_pthread(){
 	unsigned long diff;
 	ull start;
 	ull end;
+	unsigned long best = (unsigned long) -1;
 
-	/* Timing section */
-	RDTSC(start);
-	pthread_create(&thr, NULL, pthread_func, NULL);	
-	pthread_join(thr, (void**)NULL);
-	RDTSC(end);
-	/* End section */
+	int x;
+	for(x = 0;x < 10000;x++)
+	{
+		/* Timing section */
+		RDTSC(start);
+		pthread_create(&thr, NULL, pthread_func, NULL);	
+		pthread_join(thr, (void**)NULL);
+		RDTSC(end);
+		diff = end - start;
+		/* End section */
+		if(diff < best) best = diff;
+	}
 
-	diff = end - start;
-	printf("Start cycles: %llu\n", start);
-	printf("End cycles  : %llu\n", end);
-	printf("Difference  : %llu\n", (end - start));
-
-        int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
-        if(file < 0) printf("BAD FILE!\n");
-        char numbuffer[512];
-        snprintf(numbuffer, 512, "%lu\n", diff);
-        write(file, numbuffer, strlen(numbuffer));
-        close(file);
+	diff = best;
+	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
+	if(file < 0) printf("BAD FILE!\n");
+	char numbuffer[512];
+	snprintf(numbuffer, 512, "%lu\n", diff);
+	write(file, numbuffer, strlen(numbuffer));
+	close(file);
 }
 
 int main(int argc, char** argv)

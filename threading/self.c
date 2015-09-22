@@ -16,16 +16,20 @@ void* pthread_func(void* argument)
 	ull end;
 
 	unsigned long diff;
+	unsigned long best = (unsigned long)-1;
+	
+	int x;
+	for(x = 0;x < 10000;x++)
+	{
+		RDTSC(start);
+		pthread_t t = pthread_self();
+		RDTSC(end);
+		diff = end - start;
+		if(diff < best) best = diff;
+		if(!t) perror("");
+	}
 
-	RDTSC(start);
-	pthread_t t = pthread_self();
-	RDTSC(end);
-
-	if(!t) printf("No p?\n"); 
-        printf("Start cycles: %llu\n", start);
-        printf("End cycles  : %llu\n", end);
-        printf("Difference  : %llu\n", (end - start));
-	diff = end - start;
+	diff = best;
 	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
         if(file < 0) printf("BAD FILE!\n");
         char numbuffer[512];

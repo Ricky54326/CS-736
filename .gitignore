@@ -10,6 +10,7 @@ time_proc
 time_pthread
 pipe
 signal
+cond
 
 parent.txt
 child.txt

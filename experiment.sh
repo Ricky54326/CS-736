@@ -23,6 +23,10 @@ printf "Base Measurement .... "
 FAST=$($REPEAT ./rdtsc)
 ./calc -s $SPEED $FAST
 
+printf "gettimeofday ........ "
+FAST=$($REPEAT ./gettimeofday)
+./calc -s $SPEED $FAST
+
 # Rebuild rdtsc
 rm ./rdtsc
 # echo "Rebuilding rdtsc..."
@@ -63,11 +67,8 @@ FAST=$($REPEAT ./mutex)
 ./calc -s $SPEED $FAST
 
 printf "Threads Condition ... "
-#FAST=$($REPEAT ./condvar)
-#echo $FAST
-#./calc -s $SPEED $FAST
-# $REPEAT ./condvar
-echo ""
+FAST=$($REPEAT ./cond)
+./calc -s $SPEED $FAST
 
 printf "Fault time .......... "
 FAST=$($REPEAT ./fault)

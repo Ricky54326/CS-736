@@ -20,25 +20,28 @@ void time_proc(){
 	ull high;
 	ull low;
 	unsigned long diff;
+	unsigned long best = (unsigned long)-1;
 	uint val;
-	RDTSC(start);
 
-	//child
-	if(fork() == 0){
-		exit(EXIT_SUCCESS);
+	int x;
+	for(x = 0;x < 10000;x++)
+	{
+		RDTSC(start);
+		//child
+		if(fork() == 0){
+			exit(EXIT_SUCCESS);
+		}
+		//parent
+		else{
+			wait();
+		}
+		RDTSC(end);
+
+		diff = end - start;
+		if(diff < best) best = diff;
 	}
 
-	//parent
-	else{
-		wait();
-	}
-	RDTSC(end);
-
-	printf("Start cycles: %llu\n", start);
-	printf("End cycles  : %llu\n", end);
-	printf("Difference  : %llu\n", (end - start));
-
-	diff = end - start;
+	diff = best;
 
 	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
 	if(file < 0) printf("BAD FILE!\n");

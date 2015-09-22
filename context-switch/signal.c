@@ -30,31 +30,18 @@ struct process_sync
 	char value;
 };
 
+unsigned int final_val;
 void main_handler(int sig)
 {
 	RDTSC(end);
+	final_val = end - start;
 	if(sig != SIGNAL)
 	{
 		/* Not the right signal!! */
 		printf("An invalid signal was received.\n");
 		end = start + 10000000;
+		final_val = (unsigned int)-1;
 	}
-
-	printf("Relay complete.\n");
-	printf("Starting cycles: %llu\n", start);
-	printf("Ending cycles  : %llu\n", end);
-	printf("Cycles to comp : %llu\n", (end - start));
-	diff = end - start;
-
-	int file = open("output.txt", O_APPEND | O_RDWR | O_CREAT, 0644);
-	if(file < 0) printf("BAD FILE!\n");
-	char numbuffer[512];
-	snprintf(numbuffer, 512, "%lu\n", diff);
-	write(file, numbuffer, strlen(numbuffer));
-	close(file);
-
-	/* End process */
-	exit(0);
 }
 
 void child_handler(int sig)
@@ -65,7 +52,7 @@ void child_handler(int sig)
 	exit(0);
 }
 
-int main(int argc, char** argv)
+unsigned int experiment(void)
 {
 	struct process_sync* share = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
 			MAP_SHARED | MAP_ANONYMOUS | MAP_POPULATE, -1, 0);
@@ -171,16 +158,50 @@ int main(int argc, char** argv)
 		fflush(stdout);
 
 		unsigned int val;
-		RDTSC(start);
-		kill(child, SIGNAL);
+		RDTSC(start); /* Start the timer */
+		kill(child, SIGNAL); /* Signal the child */
 
 		/* Wait for signal to come back. */	
-		for(;;);
+		for(;!final_val;);
+
+		diff = final_val;
+
+		int file = open("output.txt", O_APPEND |O_RDWR | O_CREAT, 0644);
+		if(file < 0) printf("BAD FILE!\n");
+		char numbuffer[512];
+		snprintf(numbuffer, 512, "%lu\n", diff);
+		write(file, numbuffer, strlen(numbuffer));
+		close(file);
+		return diff;
+
 	} else {
 		printf("Fork failure.\n");
 		perror("");
 		return -1;
 	}
+
+	return 0;
+}
+
+int main(int argc, char** argv)
+{
+	unsigned int best = (unsigned int)-1;
+	
+	int x;
+	for(x = 0;x < 10000;x++)
+	{
+		unsigned int exp = experiment();
+		if(exp < best) best = exp;
+	}
+
+	unsigned int diff = best;
+
+	int file = open("output.txt", O_APPEND |O_RDWR | O_CREAT, 0644);
+                if(file < 0) printf("BAD FILE!\n");
+                char numbuffer[512];
+                snprintf(numbuffer, 512, "%lu\n", diff);
+                write(file, numbuffer, strlen(numbuffer));
+                close(file);
 
 	return 0;
 }

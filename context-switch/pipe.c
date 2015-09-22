@@ -29,7 +29,7 @@ struct process_sync
 	char child_ready;
 };
 
-int main(int argc, char** argv)
+unsigned int experiment(void)
 {
 	struct process_sync* share = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
 			MAP_SHARED | MAP_ANONYMOUS | MAP_POPULATE, -1, 0);
@@ -61,8 +61,6 @@ int main(int argc, char** argv)
 	/* Pipe to send messages from child to parent */
 	int to_parent[2];
 	pipe(to_parent);
-
-	
 
 	/* Set the parent pid */
 	parent = getpid();
@@ -157,20 +155,36 @@ int main(int argc, char** argv)
 		printf("Cycles to comp : %llu\n", (end - start));
 
 		diff = end - start;
-		int file = open("output.txt", 
-			O_APPEND | O_RDWR | O_CREAT, 0644);
-		if(file < 0) printf("BAD FILE!\n");
-		char numbuffer[512];
-		snprintf(numbuffer, 512, "%lu\n", diff);
-		write(file, numbuffer, strlen(numbuffer));
-		close(file);
-
-		return 0;
+		return diff;
 	} else {
 		printf("Fork failure.\n");
 		perror("");
 		return -1;
 	}
+
+	return 0;
+}
+
+int main(int argc, char** argv)
+{
+	unsigned int best = (unsigned int)(-1);
+
+	int x;
+	for(x = 0;x < 10000;x++)
+	{
+		unsigned int result = experiment();
+		if(result < best) best = result;
+	}
+
+	unsigned int diff = best;
+
+	int file = open("output.txt",
+			O_APPEND | O_RDWR | O_CREAT, 0644);
+	if(file < 0) printf("BAD FILE!\n");
+	char numbuffer[512];
+	snprintf(numbuffer, 512, "%lu\n", diff);
+	write(file, numbuffer, strlen(numbuffer));
+	close(file);
 
 	return 0;
 }
