@@ -8,6 +8,7 @@ CLEAN="output.txt fastest.txt"
 touch $CLEAN
 
 echo "Building..."
+make clean > /dev/null
 make clean all > /dev/null
 
 printf "Current cpu speed ... "

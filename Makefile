@@ -15,7 +15,8 @@ TIMING := rdtsc \
 
 CONTEXT := signal \
 	pipe \
-	mutex
+	mutex \
+	cv
 
 CONTEXT_BIN := $(addprefix context-switch/, $(CONTEXT))
 CONTEXT_SOURCES := $(addsuffix .c, $(CONTEXT_BIN))
