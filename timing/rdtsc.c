@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 	uint best = (uint)-1;
 	int x;
 
-	for(x = 0;x < 1000;x++)
+	for(x = 0;x < 100000;x++)
 	{
 		RDTSC(start);
 		/* GET PID */

@@ -101,6 +101,8 @@ unsigned int experiment(void)
 		write(writep, &word, sizeof(int));
 
 		/* We're done */
+		close(to_child[1]);
+		close(to_parent[0]);
 		exit(0);
 	} else if(child > 0) 
 	{
@@ -140,8 +142,6 @@ unsigned int experiment(void)
 		read(readp, &recv, sizeof(int));
 		RDTSC(end);
 
-		
-
 		if(send != recv)
 		{
 			printf("TRANSFER ERROR!\n");
@@ -153,6 +153,9 @@ unsigned int experiment(void)
 		printf("Starting cycles: %llu\n", start);
 		printf("Ending cycles  : %llu\n", end);
 		printf("Cycles to comp : %llu\n", (end - start));
+
+		close(to_child[1]);
+		close(to_parent[0]);
 
 		diff = end - start;
 		return diff;

@@ -23,32 +23,30 @@ printf "Base Measurement .... "
 FAST=$($REPEAT ./rdtsc)
 ./calc -s $SPEED $FAST
 
-printf "gettimeofday ........ "
-FAST=$($REPEAT ./gettimeofday)
-./calc -s $SPEED $FAST
+#printf "gettimeofday ........ "
+#FAST=$($REPEAT ./gettimeofday)
+#./calc -s $SPEED $FAST
 
 # Rebuild rdtsc
-rm ./rdtsc
-# echo "Rebuilding rdtsc..."
-make BUILD_FLAGS="-DGETPID" rdtsc > /dev/null
-printf "PID test: ........... "
-FAST=$($REPEAT ./rdtsc)
-./calc -s $SPEED $FAST
+#rm ./rdtsc
+#make BUILD_FLAGS="-DGETPID" rdtsc > /dev/null
+#printf "PID test: ........... "
+#FAST=$($REPEAT ./rdtsc)
+#./calc -s $SPEED $FAST
 
-rm ./rdtsc
-# echo "Rebuilding rdtsc..."
-make BUILD_FLAGS="-DGETUID" rdtsc > /dev/null
-printf "UID test ............ "
-FAST=$($REPEAT ./rdtsc)
-./calc -s $SPEED $FAST
+#rm ./rdtsc
+#make BUILD_FLAGS="-DGETUID" rdtsc > /dev/null
+#printf "UID test ............ "
+#FAST=$($REPEAT ./rdtsc)
+#./calc -s $SPEED $FAST
 
-printf "PThread self ........ "
-FAST=$($REPEAT ./self)
-./calc -s $SPEED $FAST
+#printf "PThread self ........ "
+#FAST=$($REPEAT ./self)
+#./calc -s $SPEED $FAST
 
-printf "Pthread join ........ "
-FAST=$($REPEAT ./time_pthread)
-./calc -s $SPEED $FAST
+#printf "Pthread join ........ "
+#FAST=$($REPEAT ./time_pthread)
+#./calc -s $SPEED $FAST
 
 printf "FORK/WAIT ........... "
 FAST=$($REPEAT ./time_proc)

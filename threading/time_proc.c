@@ -24,7 +24,7 @@ void time_proc(){
 	uint val;
 
 	int x;
-	for(x = 0;x < 10000;x++)
+	for(x = 0;x < 1000;x++)
 	{
 		RDTSC(start);
 		//child
